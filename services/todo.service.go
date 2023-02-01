@@ -37,7 +37,7 @@ func (t *TodoServiceImpl) CreateTodo(todo *models.CreateTodoRequest) (*models.DB
 
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
-			return nil, errors.New("todo with that title already exists")
+			return nil, err
 		}
 		return nil, err
 	}
@@ -45,10 +45,10 @@ func (t *TodoServiceImpl) CreateTodo(todo *models.CreateTodoRequest) (*models.DB
 	opt := options.Index()
 	opt.SetUnique(true)
 
-	index := mongo.IndexModel{Keys: bson.M{"title": 1}, Options: opt}
+	index := mongo.IndexModel{Keys: bson.M{"task": 1}, Options: opt}
 
 	if _, err := t.todoCollection.Indexes().CreateOne(t.ctx, index); err != nil {
-		return nil, errors.New("could not create index for title")
+		return nil, errors.New("could not create index for task")
 	}
 
 	var newTodo *models.DBTodo

@@ -29,7 +29,7 @@ func (tc *TodoController) CreateTodo(ctx *gin.Context) {
 	newTodo, err := tc.todoService.CreateTodo(todo)
 
 	if err != nil {
-		if strings.Contains(err.Error(), "title already exists") {
+		if strings.Contains(err.Error(), "task already exists") {
 			ctx.JSON(http.StatusConflict, gin.H{"status": "fail", "message": err.Error()})
 			return
 		}
